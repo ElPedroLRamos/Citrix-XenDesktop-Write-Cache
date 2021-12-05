@@ -9,7 +9,7 @@ $deliveryController = server_name
 $deliveryGroups = Get-BrokerDesktopGroup -IsRemotePC $false -AdminAddress $deliveryController
 
 # Get list of only application servers (XenApp servers)
-$deliveryGroupsServersOnly = Get-BrokerDesktopGroup -IsRemotePC $false -AdminAddress WA00CXDDCP01 -DeliveryType AppsOnly
+$deliveryGroupsServersOnly = Get-BrokerDesktopGroup -IsRemotePC $false -AdminAddress $deliveryController -DeliveryType AppsOnly
 
 # Array to store the Delivery Group name of application servers only (XenApp servers)
 $appServerGroup = @()
@@ -64,13 +64,13 @@ while ($promptUser) {
 
 # Process which groups to check
 if ($checkall -eq $true) {
-    $provisionedSystems = Get-BrokerDesktop -AdminAddress WA00CXDDCP01 -PowerState On
+    $provisionedSystems = Get-BrokerDesktop -AdminAddress $deliveryController -PowerState On
 } elseif ($checkserversonly -eq $true) {
     foreach ($group in $appServerGroup) {
-        $provisionedSystems += Get-BrokerDesktop -AdminAddress WA00CXDDCP01 -PowerState On -DesktopGroupName $group
+        $provisionedSystems += Get-BrokerDesktop -AdminAddress $deliveryController -PowerState On -DesktopGroupName $group
     }
 } else {
-    $provisionedSystems = Get-BrokerDesktop -AdminAddress WA00CXDDCP01 -PowerState On -DesktopGroupName $deliveryGroupToCheck
+    $provisionedSystems = Get-BrokerDesktop -AdminAddress $deliveryController -PowerState On -DesktopGroupName $deliveryGroupToCheck
 }
 
 # Get Write Cache Free space from delivery groups user selected
